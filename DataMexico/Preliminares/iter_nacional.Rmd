@@ -25,13 +25,14 @@ library(plyr) #Manipulación de datos
 library(dplyr) #Manipulación de datos
 library(tidyr) #Manipulación de datos
 library(lubridate) #Manipulación de fechas
+library(stringr) #Manipulación de strings
 library(readr) #Lectura de archivos
 library(knitr) #Generar los htmls
 library(ggplot2) #Gráficas
 ```
 
 ```{r}
-iter_nal <- read_csv("../Datos brutos/Censo/ITER/NAL_2010/conjunto_de_datos/iter_00_cpv2010.csv")
+iter_nal <- read_csv("C:/Users/ETRAPAGA/Documents/NAL_2010/conjunto_de_datos/iter_00_cpv2010.csv")
 ```
 
 ## Análisis preliminar del censo 2010 (Por localidad, nacional) {.tabset .tabset-fade .tabset-pills}
@@ -53,8 +54,102 @@ iter_agg <- iter_nal %>% filter(is.na(iter_nal$altitud)==TRUE)
 tibble(unique(iter_agg$nom_loc))
 ```
 
-Los datos cuentan con las siguientes características:
+Se grafican las coordenadas:
 ```{r}
-summary(iter_nal_geo)
+ggplot(iter_nal_geo, aes(x=-1*longitud, y=latitud))+geom_point()+theme_bw()
 ```
+
+Se sustituyen los * por NA's:
+```{r}
+iter_nal_geo[iter_nal_geo=="*"] <- NA
+```
+
+Se sustituyen los N/D's por NA's:
+```{r}
+iter_nal_geo[iter_nal_geo=="N/D"] <- NA
+```
+
+### Nuevas bases de datos
+De acuerdo a la documentación del censo se partirá la base de datos (sin totales) en varias sub-bases. En todas estas nuevas bases se incluirá la identificación geográfica del lugar.
+```{r}
+poblacion <- iter_nal_geo[,c(1:56,200)]
+fecundidad <- iter_nal_geo[, c(1:9,57,200)]
+migracion <- iter_nal_geo[, c(1:9,58:69,200)]
+poblacion_indigena <- iter_nal_geo[, c(1:9, 70:82, 200)]
+discapacidad <- iter_nal_geo[, c(1:9, 83:91, 200)]
+educacion <- iter_nal_geo[, c(1:9, 92:133, 200)]
+economia <- iter_nal_geo[, c(1:9, 134:145, 200)]
+salud <- iter_nal_geo[, c(1:9, 146:151, 200)]
+edo_civil <- iter_nal_geo[, c(1:9, 152:154, 200)]
+religion <- iter_nal_geo[, c(1:9, 155:158, 200)]
+hogares <- iter_nal_geo[, c(1:9, 159:164, 200)]
+vivienda <- iter_nal_geo[, c(1:9, 165:200)]
+```
+
+Población
+```{r}
+head(poblacion)
+```
+
+Fecundidad
+```{r}
+head(fecundidad)
+```
+
+Migración
+```{r}
+head(migracion)
+```
+
+Población indigena
+```{r}
+head(poblacion_indigena)
+```
+
+Discapacidad
+```{r}
+head(discapacidad)
+```
+
+Educación
+```{r}
+head(educacion)
+```
+
+Economía
+```{r}
+head(economia)
+```
+
+Salud
+```{r}
+head(salud)
+```
+
+Estado civil
+```{r}
+head(edo_civil)
+```
+
+Religión
+```{r}
+head(religion)
+```
+
+Hogares
+```{r}
+head(hogares)
+```
+
+Vivienda
+```{r}
+head(vivienda)
+```
+
+
+
+
+
+
+
 
