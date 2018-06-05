@@ -1,0 +1,60 @@
+---
+title: "Preliminar"
+author: "Edmar Trápaga Vieyra"
+date: "4 de junio de 2018"
+output:
+  html_document:
+    df_print: paged
+    highlight: tango
+    theme: flatly
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, error = F, message = F, fig.align = "center")
+```
+
+```{r}
+setwd("C:/Users/ETRAPAGA/Documents/Nextia/DataMexico/Preliminares") # Se establece el directorio de trabajo
+set.seed(04062018) # Se establece una semilla 
+```
+
+```{r}
+# Se cargan las librerías (Tidyverse)
+library(plyr) #Manipulación de datos
+library(dplyr) #Manipulación de datos
+library(tidyr) #Manipulación de datos
+library(lubridate) #Manipulación de fechas
+library(readr) #Lectura de archivos
+library(knitr) #Generar los htmls
+library(ggplot2) #Gráficas
+```
+
+```{r}
+iter_nal <- read_csv("../Datos brutos/Censo/ITER/NAL_2010/conjunto_de_datos/iter_00_cpv2010.csv")
+```
+
+## Análisis preliminar del censo 2010 (Por localidad, nacional) {.tabset .tabset-fade .tabset-pills}
+
+### EDA
+```{r}
+tibble(unique(iter_nal$nom_ent)) #Nombres de entidades
+tibble(unique(iter_nal$nom_loc)) #Nombres de localidades
+```
+
+```{r}
+iter_nal_geo <- iter_nal %>% filter(is.na(iter_nal$altitud)==FALSE) # Datos sin los totales 
+tibble(unique(iter_nal_geo$nom_ent)) # Se verifica que se tienen solo los datos desagregados
+```
+
+Se han quitado `r dim(iter_nal)[1]-dim(iter_nal_geo)[1]` observaciones pertenecientes a los siguientes niveles de agregación:
+```{r}
+iter_agg <- iter_nal %>% filter(is.na(iter_nal$altitud)==TRUE)
+tibble(unique(iter_agg$nom_loc))
+```
+
+Los datos cuentan con las siguientes características:
+```{r}
+summary(iter_nal_geo)
+```
+
